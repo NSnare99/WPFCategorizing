@@ -1,0 +1,375 @@
+﻿<Window x:Class="InterviewQuestion_WPF.MainWindow"
+        x:Name="Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InterviewQuestion_WPF"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key='ColumnTitleText' TargetType='Label'>
+            <Setter Property='Foreground'
+                    Value='White' />
+            <Setter Property='Background'
+                    Value='#6CACE4' />
+            <Setter Property='FontSize'
+                    Value='24' />
+        </Style>
+
+        <Style x:Key="BlueBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="Blue" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="10,10,10,10"/>
+        </Style>
+
+        <Style x:Key="WhiteTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <Style x:Key="CustomButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF4081FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="3" Direction="330" Opacity="0.7"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CombinedButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CustomButtonStyle}">
+            <Setter Property="Background" Value="#FF4081FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF6FA8DC"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="ApplicationGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.75*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="2.5*"/>
+
+        </Grid.ColumnDefinitions>
+
+
+        <Label Padding='10' Grid.ColumnSpan="3"
+               FontFamily='Lucida Sans'
+               FontSize='72'
+               Background='#003087'
+               Foreground='White'
+               HorizontalContentAlignment='Center'
+               HorizontalAlignment='Stretch'>WPF Interview Quiz</Label>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="1">
+            <Label x:Name="DataSelectionLabel"  Style='{StaticResource ColumnTitleText}'>User Selection</Label>
+            <ComboBox Name="DataSelector" Margin="0,10,0,0" SelectionChanged="ComboBox_SelectionChanged" Width="400" SelectedIndex='0' FontSize='20'>
+            </ComboBox>
+
+
+
+        </StackPanel>
+
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2">
+            <Label x:Name="DataDisplayLabel"  Style='{StaticResource ColumnTitleText}'>User Data Display</Label>
+            
+
+
+
+        </StackPanel>
+
+
+
+        <StackPanel HorizontalAlignment="Center" Width="300" Grid.Row="2">
+            <Button  Style='{StaticResource CombinedButtonStyle}' Height="30" Content="Add New Value" Click="AddNewUser_Click" Margin="5"/>
+            <Button  Style='{StaticResource CombinedButtonStyle}'  Height="30" Content="Edit Selection" Click="EditSelection_Click" Margin="5" />
+            <Button   Style='{StaticResource CombinedButtonStyle}'   Height="30" Content="Delete Selection" Margin="5" Click="DeleteSelection_Click" />
+            <Button   Style='{StaticResource CombinedButtonStyle}'  Height="30" Content="Switch To TableView" Margin="5" Click="ChangeWindow_Click" />
+           
+        </StackPanel>
+
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch"></GridSplitter>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2"  HorizontalAlignment="Center" Margin="0,50,0,0">
+
+            <!--<ListView Name="lvEntries"   ItemsSource="{Binding EntriesSaved}"/>-->
+
+            <StackPanel Orientation="Horizontal">
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="User ID: " Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSelectionUserID}"  Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+               
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal">
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="Display Name: " Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSelectionDisplayName}"  Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal">
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="Last Name: " Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSelectionLastName}"  Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal">
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="First Name: " Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+                <Border Style='{StaticResource BlueBorderStyle}'>
+                    <TextBlock Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSelectionFirstName}"  Style='{StaticResource WhiteTextBlockStyle}'/>
+                </Border>
+
+            </StackPanel>
+
+
+
+
+
+        </StackPanel>
+
+
+
+        <Grid x:Name="DataGrid" >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width='0' />
+                <ColumnDefinition Width='*' />
+                <ColumnDefinition Width='2*' />
+            </Grid.ColumnDefinitions>
+
+
+
+
+
+            <!--<Label Grid.Row='0'
+                   Grid.Column='1'
+                 
+                   Style='{StaticResource ColumnTitleText}'>User ID</Label>
+            <Label Grid.Row='0'
+                   Grid.Column='2'
+                    x:Name="userIdLabel"
+                    Style='{StaticResource ColumnTitleText}'></Label>
+          
+
+            <Label Grid.Row='1'
+                   Grid.Column='1'
+                   Style='{StaticResource ColumnTitleText}'>First Name</Label>
+          
+            <Label Grid.Row='1'
+                   Grid.Column='2'
+                   x:Name="firstNameLabel"
+                   Style='{StaticResource ColumnTitleText}'></Label>
+
+            <Label Grid.Row='2'
+                   Grid.Column='1'
+                   Style='{StaticResource ColumnTitleText}'>Last Name</Label>
+           
+            <Label Grid.Row='2'
+                   Grid.Column='2'
+                   x:Name="lastNameLabel"
+                   Style='{StaticResource ColumnTitleText}'></Label>
+
+            <Label Grid.Row='3'
+                   Grid.Column='1'
+                   Style='{StaticResource ColumnTitleText}'>Display Name</Label>
+           
+            <Label Grid.Row='3'
+                   Grid.Column='2'
+                   x:Name="displayNameLabel"
+                   Style='{StaticResource ColumnTitleText}'></Label>-->
+        </Grid>
+
+        <Grid Margin="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="80"></RowDefinition>
+            </Grid.RowDefinitions>
+
+
+        </Grid>
+
+
+
+
+
+
+        <!-- Popup -->
+
+        <Popup Name="createPopup" IsOpen="False" Placement="Center" >
+            <Border Background="LightGray" BorderBrush="Black" BorderThickness="1" Padding="10" Width="300" Height="200">
+                <StackPanel>
+                    <TextBlock Text="Add New User" FontWeight="Bold" Margin="0,0,0,10" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="User ID: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldUserID_NewUser"  Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Display Name: "   VerticalAlignment="Center" FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldDisplayName_NewUser"  Margin="5,0,0,0" Width="200"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="First Name: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldFirstName_NewUser"  Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Last Name: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldLastName_NewUser"   Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <!-- Submit Button -->
+                    <Button Content="Submit" Click="SubmitNewUser_Click" Width="100" Margin="0,10,0,0" />
+                    <Button Content="Cancel" Click="SubmitNewUser_Cancel" Width="100" Margin="0,10,0,0" />
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Popup Name="editPopup" IsOpen="False" Placement="Center" >
+            <Border Background="LightGray" BorderBrush="Black" BorderThickness="1" Padding="10" Width="300" Height="200">
+                <StackPanel>
+                    <TextBlock Text="Edit Selection" FontWeight="Bold" Margin="0,0,0,10" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="User ID: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldUserID"  Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Display Name: "   VerticalAlignment="Center" FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldDisplayName"  Margin="5,0,0,0" Width="200"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="First Name: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldFirstName"  Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Last Name: " VerticalAlignment="Center"  FontWeight="Bold"/>
+                        <TextBox x:Name="txtFieldLastName"   Margin="5,0,0,0" Width="200" />
+                    </StackPanel>
+
+                    <!-- Submit Button -->
+                    <Button Content="Submit" Click="SubmitEdits_Click" Width="100" Margin="0,10,0,0" />
+                    <Button Content="Cancel" Click="SubmitEdits_Cancel" Width="100" Margin="0,10,0,0" />
+                </StackPanel>
+            </Border>
+        </Popup>
+
+
+        <Popup Name="confirmationPopup" IsOpen="False" Placement="Center">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Warning: Changes will be overwritten. Are you sure?" FontWeight="Bold" Margin="0,0,0,10" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Confirm" Click="ConfirmEditsButton_Click" Width="80" Margin="5"/>
+                        <Button Content="Decline" Click="DeclineEditsButton_Click" Width="80" Margin="5"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+
+        <Popup Name="noChangesPopup" IsOpen="False" Placement="Center">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Alert: No Changes Made" FontWeight="Bold" Margin="0,0,0,10" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Close" Click="CloseNoChangesPopup_Click" Width="80" Margin="5"/>
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Popup Name="idChangePopup" IsOpen="False" Placement="Center">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Alert: Cannot change ID without deleting entry" FontWeight="Bold" Margin="0,0,0,10" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Close" Click="CloseNoChangesPopup_Click" Width="80" Margin="5"/>
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+
+
+    </Grid>
+</Window>
