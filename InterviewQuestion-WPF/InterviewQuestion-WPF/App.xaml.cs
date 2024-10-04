@@ -7,7 +7,7 @@ using System.Windows.Documents;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace InterviewQuestion_WPF
-{
+{ 
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
